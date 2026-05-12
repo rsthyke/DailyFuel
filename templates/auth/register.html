@@ -1,0 +1,49 @@
+{% extends 'base_auth.html' %}
+{% block title %}Register{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title mb-3">Create Account</h5>
+    <form method="post">
+      <div class="mb-3">
+        <label class="form-label">Name</label>
+        <input type="text" name="name" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" name="email" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input type="password" name="password" class="form-control" required>
+      </div>
+      <div class="row">
+        <div class="col mb-3">
+          <label class="form-label">Height (cm)</label>
+          <input type="number" name="height" class="form-control" required>
+        </div>
+        <div class="col mb-3">
+          <label class="form-label">Weight (kg)</label>
+          <input type="number" name="weight" class="form-control" required>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Age</label>
+        <input type="number" name="age" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Gender</label>
+        <select name="gender" class="form-select" required>
+          <option value="">select...</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Register</button>
+    </form>
+    <div class="text-center mt-3">
+      <a href="{{ url_for('login') }}">already have account? login</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
