@@ -1,10 +1,12 @@
 import hashlib
+from datetime import timedelta
 from flask import Flask, flash, redirect, render_template, request, session, url_for
 from db import init_app
 import db as database
 
 app = Flask(__name__)
 app.secret_key = 'mysecretkey123'
+app.permanent_session_lifetime = timedelta(days=30)
 init_app(app)
 
 
@@ -20,7 +22,9 @@ def calculate_bmr(weight, height, age, gender):
 
 @app.route('/')
 def index():
-    return 'hello this is dailyfuel'
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    return 'welcome ' + session['user_name']
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -33,8 +37,6 @@ def register():
         weight   = float(request.form['weight'])
         age      = int(request.form['age'])
         gender   = request.form['gender']
-
-        print('register attempt:', email)  # debug
 
         db = database.get_db()
         if db.execute('SELECT id FROM users WHERE email = ?', (email,)).fetchone():
@@ -52,9 +54,27 @@ def register():
     return render_template('auth/register.html')
 
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    return 'login page coming soon'
+    if request.method == 'POST':
+        email    = request.form['email'].strip().lower()
+        password = request.form['password']
+        remember = request.form.get('remember')
+
+        db   = database.get_db()
+        user = db.execute('SELECT * FROM users WHERE email = ?', (email,)).fetchone()
+
+        if not user or user['password'] != hash_pw(password):
+            flash('wrong email or password', 'danger')
+            return render_template('auth/login.html')
+
+        session.clear()
+        session['user_id']   = user['id']
+        session['user_name'] = user['name']
+        if remember:
+            session.permanent = True
+        return redirect(url_for('index'))
+    return render_template('auth/login.html')
 
 
 if __name__ == '__main__':
