@@ -1,4 +1,5 @@
 import hashlib
+from functools import wraps
 from datetime import timedelta
 from flask import Flask, flash, redirect, render_template, request, session, url_for
 from db import init_app
@@ -12,6 +13,16 @@ init_app(app)
 
 def hash_pw(password):
     return hashlib.sha256(password.encode()).hexdigest()
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if 'user_id' not in session:
+            flash('you need to login first', 'warning')
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated
 
 
 def calculate_bmr(weight, height, age, gender):
