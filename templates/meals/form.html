@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'Edit Meal' if action == 'edit' else 'Add Meal' }}{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title mb-4">{{ 'Edit Meal' if action == 'edit' else 'Add Meal' }}</h5>
+        <form method="post">
+          <div class="mb-3">
+            <label class="form-label">Date</label>
+            <input type="date" name="date" class="form-control"
+                   value="{{ meal['date'] if meal else default_date }}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Meal Name</label>
+            <input type="text" name="meal_name" class="form-control"
+                   value="{{ meal['meal_name'] if meal else '' }}"
+                   placeholder="breakfast, lunch etc" required>
+          </div>
+          <div class="mb-4">
+            <label class="form-label">Calories</label>
+            <input type="number" name="calories" class="form-control"
+                   value="{{ meal['calories'] if meal else '' }}"
+                   placeholder="450" required>
+          </div>
+          <div class="d-flex gap-2 justify-content-end">
+            <a href="{{ url_for('meals') }}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">
+              {{ 'Save' if action == 'edit' else 'Add Meal' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
