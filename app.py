@@ -77,6 +77,13 @@ def login():
     return render_template('auth/login.html')
 
 
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash('you logged out', 'info')
+    return redirect(url_for('login'))
+
+
 if __name__ == '__main__':
     with app.app_context():
         from db import init_db
